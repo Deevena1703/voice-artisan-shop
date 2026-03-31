@@ -34,8 +34,6 @@ const Navbar = () => {
         <div className="navbar-mobile-menu">
           <Link to="/products" className="navbar-link" onClick={() => setMobileOpen(false)}>Browse Products</Link>
           <Link to="/categories" className="navbar-link" onClick={() => setMobileOpen(false)}>Categories</Link>
-          <Link to="/buyer/dashboard" className="navbar-link" onClick={() => setMobileOpen(false)}>Buyer Dashboard</Link>
-          <Link to="/manufacturer/dashboard" className="navbar-link" onClick={() => setMobileOpen(false)}>Manufacturer Dashboard</Link>
           <button className="btn btn-outline btn-sm" onClick={() => { navigate("/login"); setMobileOpen(false); }}>Login</button>
           <button className="btn btn-primary btn-sm" onClick={() => { navigate("/register"); setMobileOpen(false); }}>Get Started</button>
         </div>
