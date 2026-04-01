@@ -75,9 +75,6 @@ const BuyerDashboard = () => {
                 Cart
                 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               </button>
-              <button className="btn btn-outline btn-logout" onClick={() => navigate("/")}>
-                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
-              </button>
             </div>
           </div>
         </motion.div>
