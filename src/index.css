@@ -520,3 +520,7 @@ button { cursor: pointer; font-family: inherit; }
   border-radius: var(--radius); font-size: 0.8rem; color: hsl(var(--accent));
   border-left: 3px solid hsl(var(--accent));
 }
+
+/* ===== Product Edit Inline ===== */
+.product-edit-fields { display: flex; flex-direction: column; gap: 0.375rem; }
+.form-input-sm { padding: 0.375rem 0.5rem; font-size: 0.8rem; }
