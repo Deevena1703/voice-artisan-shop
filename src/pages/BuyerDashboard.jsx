@@ -82,7 +82,7 @@ const BuyerDashboard = () => {
         <div className="stats-grid">
           {[
             { icon: ShoppingBag, label: "Orders", value: "0" },
-            { icon: Heart, label: "Wishlist", value: "0" },
+            { icon: Heart, label: "Wishlist", value: String(wishlist.length) },
             { icon: ShoppingCart, label: "Cart Items", value: String(cartCount) },
             { icon: Clock, label: "Recently Viewed", value: String(products.length) },
           ].map((stat) => (
