@@ -2,13 +2,19 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { products as initialProducts } from "../lib/mock-data.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Package, Mic, Video, Edit, LogOut, Upload, X, Square, Image, Check, Trash2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { Plus, Package, Mic, Video, Edit, Upload, X, Square, Image, Check, Trash2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const ManufacturerDashboard = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [showAddForm, setShowAddForm] = useState(false);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, [isLoggedIn, navigate]);
   const [myProducts, setMyProducts] = useState(initialProducts.slice(0, 3));
 
   // Form state
@@ -155,9 +161,6 @@ const ManufacturerDashboard = () => {
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button className="btn btn-primary" onClick={() => setShowAddForm(!showAddForm)}>
                 <Plus style={{ height: '1rem', width: '1rem' }} /> Add Product
-              </button>
-              <button className="btn btn-outline btn-logout" onClick={() => navigate("/")}>
-                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
               </button>
             </div>
           </div>

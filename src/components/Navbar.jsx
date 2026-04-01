@@ -1,10 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingBag, User, Menu, X } from "lucide-react";
+import { ShoppingBag, User, Menu, X, LogOut, UserCircle } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, isLoggedIn, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  const dashboardPath = user?.role === "manufacturer" ? "/manufacturer/dashboard" : "/buyer/dashboard";
 
   return (
     <nav className="navbar">
@@ -17,12 +26,28 @@ const Navbar = () => {
         <div className="navbar-links">
           <Link to="/products" className="navbar-link">Browse Products</Link>
           <Link to="/categories" className="navbar-link">Categories</Link>
-          <button className="btn btn-outline btn-sm" onClick={() => navigate("/login")}>
-            <User style={{ height: '1rem', width: '1rem' }} /> Login
-          </button>
-          <button className="btn btn-primary btn-sm" onClick={() => navigate("/register")}>
-            Get Started
-          </button>
+          {isLoggedIn ? (
+            <>
+              <button className="btn btn-outline btn-sm" onClick={() => navigate(dashboardPath)}>
+                Dashboard
+              </button>
+              <button className="btn btn-outline btn-sm" onClick={() => navigate("/profile")}>
+                <UserCircle style={{ height: '1rem', width: '1rem' }} /> Profile
+              </button>
+              <button className="btn btn-outline btn-sm btn-logout" onClick={handleLogout}>
+                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-outline btn-sm" onClick={() => navigate("/login")}>
+                <User style={{ height: '1rem', width: '1rem' }} /> Login
+              </button>
+              <button className="btn btn-primary btn-sm" onClick={() => navigate("/register")}>
+                Get Started
+              </button>
+            </>
+          )}
         </div>
 
         <button className="navbar-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
@@ -34,8 +59,22 @@ const Navbar = () => {
         <div className="navbar-mobile-menu">
           <Link to="/products" className="navbar-link" onClick={() => setMobileOpen(false)}>Browse Products</Link>
           <Link to="/categories" className="navbar-link" onClick={() => setMobileOpen(false)}>Categories</Link>
-          <button className="btn btn-outline btn-sm" onClick={() => { navigate("/login"); setMobileOpen(false); }}>Login</button>
-          <button className="btn btn-primary btn-sm" onClick={() => { navigate("/register"); setMobileOpen(false); }}>Get Started</button>
+          {isLoggedIn ? (
+            <>
+              <button className="btn btn-outline btn-sm" onClick={() => { navigate(dashboardPath); setMobileOpen(false); }}>Dashboard</button>
+              <button className="btn btn-outline btn-sm" onClick={() => { navigate("/profile"); setMobileOpen(false); }}>
+                <UserCircle style={{ height: '1rem', width: '1rem' }} /> Profile
+              </button>
+              <button className="btn btn-outline btn-sm btn-logout" onClick={() => { handleLogout(); setMobileOpen(false); }}>
+                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-outline btn-sm" onClick={() => { navigate("/login"); setMobileOpen(false); }}>Login</button>
+              <button className="btn btn-primary btn-sm" onClick={() => { navigate("/register"); setMobileOpen(false); }}>Get Started</button>
+            </>
+          )}
         </div>
       )}
     </nav>

@@ -2,14 +2,34 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { products, manufacturers } from "../lib/mock-data.js";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
-import { ArrowLeft, Play, User, MapPin } from "lucide-react";
+import { ArrowLeft, Play, User, MapPin, ShoppingCart, Heart } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useState } from "react";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+  const [wishlisted, setWishlisted] = useState(false);
   const product = products.find((p) => p.id === id);
   const manufacturer = product ? manufacturers.find((m) => m.id === product.manufacturerId) : null;
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    alert("Added to cart! Go to Buyer Dashboard to view your cart.");
+  };
+
+  const handleWishlist = () => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    setWishlisted(!wishlisted);
+  };
 
   if (!product) {
     return (
@@ -57,7 +77,16 @@ const ProductDetailPage = () => {
             <h1 className="detail-title">{product.name}</h1>
             <p className="detail-price">₹{product.price.toLocaleString("en-IN")}</p>
             <p className="detail-description">{product.description}</p>
-            <button className="btn btn-primary btn-lg mt-6">Add to Cart</button>
+
+            <div className="detail-actions">
+              <button className="btn btn-primary btn-lg" onClick={handleAddToCart}>
+                <ShoppingCart style={{ height: '1.125rem', width: '1.125rem' }} /> Add to Cart
+              </button>
+              <button className={`btn btn-lg ${wishlisted ? 'btn-wishlist-active' : 'btn-outline'}`} onClick={handleWishlist}>
+                <Heart style={{ height: '1.125rem', width: '1.125rem', fill: wishlisted ? 'currentColor' : 'none' }} />
+                {wishlisted ? "Wishlisted" : "Wishlist"}
+              </button>
+            </div>
 
             {manufacturer && (
               <Link to={`/manufacturer/${manufacturer.id}`} className="manufacturer-link">

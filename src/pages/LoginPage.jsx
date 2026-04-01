@@ -2,15 +2,18 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ShoppingBag, User, Factory } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [role, setRole] = useState("buyer");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
+    login(email, role);
     navigate(role === "buyer" ? "/buyer/dashboard" : "/manufacturer/dashboard");
   };
 

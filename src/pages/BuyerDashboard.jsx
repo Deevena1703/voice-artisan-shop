@@ -4,14 +4,21 @@ import ProductCard from "../components/ProductCard.jsx";
 import CategoryCard from "../components/CategoryCard.jsx";
 import { products, categories } from "../lib/mock-data.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Heart, Clock, ShoppingCart, Trash2, Plus, Minus, X, LogOut } from "lucide-react";
-import { useState } from "react";
+import { ShoppingBag, Heart, Clock, ShoppingCart, Trash2, Plus, Minus, X } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const BuyerDashboard = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, [isLoggedIn, navigate]);
 
   const addToCart = (product) => {
     setCart((prev) => {
@@ -42,6 +49,16 @@ const BuyerDashboard = () => {
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
+  const toggleWishlist = (product) => {
+    setWishlist((prev) =>
+      prev.find((w) => w.id === product.id)
+        ? prev.filter((w) => w.id !== product.id)
+        : [...prev, product]
+    );
+  };
+
+  const isWishlisted = (id) => wishlist.some((w) => w.id === id);
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -58,9 +75,6 @@ const BuyerDashboard = () => {
                 Cart
                 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               </button>
-              <button className="btn btn-outline btn-logout" onClick={() => navigate("/")}>
-                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
-              </button>
             </div>
           </div>
         </motion.div>
@@ -68,7 +82,7 @@ const BuyerDashboard = () => {
         <div className="stats-grid">
           {[
             { icon: ShoppingBag, label: "Orders", value: "0" },
-            { icon: Heart, label: "Wishlist", value: "0" },
+            { icon: Heart, label: "Wishlist", value: String(wishlist.length) },
             { icon: ShoppingCart, label: "Cart Items", value: String(cartCount) },
             { icon: Clock, label: "Recently Viewed", value: String(products.length) },
           ].map((stat) => (
@@ -154,12 +168,38 @@ const BuyerDashboard = () => {
           {products.map((p) => (
             <div key={p.id} className="product-card-wrapper">
               <ProductCard product={p} />
-              <button className="btn btn-primary btn-sm add-to-cart-btn" onClick={() => addToCart(p)}>
-                <ShoppingCart style={{ height: '0.875rem', width: '0.875rem' }} /> Add to Cart
-              </button>
+              <div className="product-card-actions">
+                <button className="btn btn-primary btn-sm add-to-cart-btn" onClick={() => addToCart(p)}>
+                  <ShoppingCart style={{ height: '0.875rem', width: '0.875rem' }} /> Add to Cart
+                </button>
+                <button className={`btn btn-sm ${isWishlisted(p.id) ? 'btn-wishlist-active' : 'btn-outline'}`} onClick={() => toggleWishlist(p)}>
+                  <Heart style={{ height: '0.875rem', width: '0.875rem', fill: isWishlisted(p.id) ? 'currentColor' : 'none' }} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
+
+        {wishlist.length > 0 && (
+          <>
+            <h2 className="section-title mt-10">Your Wishlist ❤️</h2>
+            <div className="products-grid mt-4">
+              {wishlist.map((p) => (
+                <div key={p.id} className="product-card-wrapper">
+                  <ProductCard product={p} />
+                  <div className="product-card-actions">
+                    <button className="btn btn-primary btn-sm add-to-cart-btn" onClick={() => addToCart(p)}>
+                      <ShoppingCart style={{ height: '0.875rem', width: '0.875rem' }} /> Add to Cart
+                    </button>
+                    <button className="btn btn-sm btn-wishlist-active" onClick={() => toggleWishlist(p)}>
+                      <Heart style={{ height: '0.875rem', width: '0.875rem', fill: 'currentColor' }} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <Footer />
     </div>
