@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const BuyerDashboard = () => {
+  const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
 
