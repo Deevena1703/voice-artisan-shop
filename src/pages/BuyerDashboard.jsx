@@ -168,12 +168,38 @@ const BuyerDashboard = () => {
           {products.map((p) => (
             <div key={p.id} className="product-card-wrapper">
               <ProductCard product={p} />
-              <button className="btn btn-primary btn-sm add-to-cart-btn" onClick={() => addToCart(p)}>
-                <ShoppingCart style={{ height: '0.875rem', width: '0.875rem' }} /> Add to Cart
-              </button>
+              <div className="product-card-actions">
+                <button className="btn btn-primary btn-sm add-to-cart-btn" onClick={() => addToCart(p)}>
+                  <ShoppingCart style={{ height: '0.875rem', width: '0.875rem' }} /> Add to Cart
+                </button>
+                <button className={`btn btn-sm ${isWishlisted(p.id) ? 'btn-wishlist-active' : 'btn-outline'}`} onClick={() => toggleWishlist(p)}>
+                  <Heart style={{ height: '0.875rem', width: '0.875rem', fill: isWishlisted(p.id) ? 'currentColor' : 'none' }} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
+
+        {wishlist.length > 0 && (
+          <>
+            <h2 className="section-title mt-10">Your Wishlist ❤️</h2>
+            <div className="products-grid mt-4">
+              {wishlist.map((p) => (
+                <div key={p.id} className="product-card-wrapper">
+                  <ProductCard product={p} />
+                  <div className="product-card-actions">
+                    <button className="btn btn-primary btn-sm add-to-cart-btn" onClick={() => addToCart(p)}>
+                      <ShoppingCart style={{ height: '0.875rem', width: '0.875rem' }} /> Add to Cart
+                    </button>
+                    <button className="btn btn-sm btn-wishlist-active" onClick={() => toggleWishlist(p)}>
+                      <Heart style={{ height: '0.875rem', width: '0.875rem', fill: 'currentColor' }} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <Footer />
     </div>
