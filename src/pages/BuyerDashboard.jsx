@@ -49,6 +49,16 @@ const BuyerDashboard = () => {
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
+  const toggleWishlist = (product) => {
+    setWishlist((prev) =>
+      prev.find((w) => w.id === product.id)
+        ? prev.filter((w) => w.id !== product.id)
+        : [...prev, product]
+    );
+  };
+
+  const isWishlisted = (id) => wishlist.some((w) => w.id === id);
+
   return (
     <div className="min-h-screen">
       <Navbar />
