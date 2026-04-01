@@ -162,9 +162,6 @@ const ManufacturerDashboard = () => {
               <button className="btn btn-primary" onClick={() => setShowAddForm(!showAddForm)}>
                 <Plus style={{ height: '1rem', width: '1rem' }} /> Add Product
               </button>
-              <button className="btn btn-outline btn-logout" onClick={() => navigate("/")}>
-                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
-              </button>
             </div>
           </div>
         </motion.div>
