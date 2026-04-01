@@ -4,14 +4,21 @@ import ProductCard from "../components/ProductCard.jsx";
 import CategoryCard from "../components/CategoryCard.jsx";
 import { products, categories } from "../lib/mock-data.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Heart, Clock, ShoppingCart, Trash2, Plus, Minus, X, LogOut } from "lucide-react";
-import { useState } from "react";
+import { ShoppingBag, Heart, Clock, ShoppingCart, Trash2, Plus, Minus, X } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const BuyerDashboard = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, [isLoggedIn, navigate]);
 
   const addToCart = (product) => {
     setCart((prev) => {
