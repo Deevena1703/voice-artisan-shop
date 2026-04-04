@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ShoppingBag, User, Factory } from "lucide-react";
+import { ShoppingBag, User, Factory, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 
 const RegisterPage = () => {
@@ -16,6 +16,9 @@ const RegisterPage = () => {
     <div className="auth-page bg-gradient-hero" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ width: '100%', maxWidth: '28rem' }}>
         <div className="auth-card">
+          <button className="btn btn-ghost btn-sm mb-4" onClick={() => navigate("/")}>
+            <ArrowLeft style={{ height: '1rem', width: '1rem' }} /> Back to Home
+          </button>
           <div className="auth-header">
             <Link to="/" className="auth-logo">
               <ShoppingBag className="auth-logo-icon" />

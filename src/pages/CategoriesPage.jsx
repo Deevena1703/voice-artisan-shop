@@ -2,21 +2,31 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import CategoryCard from "../components/CategoryCard.jsx";
 import { categories } from "../lib/mock-data.js";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useAuth } from "../context/AuthContext.jsx";
 
-const CategoriesPage = () => (
-  <div className="min-h-screen">
-    <Navbar />
-    <div className="container py-10">
-      <h1 className="section-title">Categories</h1>
-      <p className="section-subtitle">Explore crafts by type</p>
-      <div className="categories-grid mt-8">
-        {categories.map((c) => (
-          <CategoryCard key={c.id} {...c} />
-        ))}
+const CategoriesPage = () => {
+  const navigate = useNavigate();
+  const { user, isLoggedIn } = useAuth();
+  const backPath = isLoggedIn ? (user?.role === "manufacturer" ? "/manufacturer/dashboard" : "/buyer/dashboard") : "/";
+
+  return (
+    <div className="min-h-screen">
+      <Navbar />
+      <div className="container py-10">
+        <button className="btn btn-ghost btn-sm mb-6" onClick={() => navigate(backPath)}>
+          <ArrowLeft style={{ height: '1rem', width: '1rem' }} /> Back
+        </button>
+        <h1 className="section-title">Categories</h1>
+        <p className="section-subtitle">Explore crafts by type</p>
+        <div className="categories-grid mt-8">
+          {categories.map((c) => (<CategoryCard key={c.id} {...c} />))}
+        </div>
       </div>
+      <Footer />
     </div>
-    <Footer />
-  </div>
-);
+  );
+};
 
 export default CategoriesPage;

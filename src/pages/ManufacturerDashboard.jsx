@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { products as initialProducts } from "../lib/mock-data.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Package, Mic, Video, Edit, Upload, X, Square, Image, Check, Trash2 } from "lucide-react";
+import { Plus, Package, Mic, Video, Edit, Upload, X, Square, Image, Check, Trash2, ArrowLeft } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -17,50 +17,31 @@ const ManufacturerDashboard = () => {
   }, [isLoggedIn, navigate]);
   const [myProducts, setMyProducts] = useState(initialProducts.slice(0, 3));
 
-  // Form state
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState([]);
   const [videoFile, setVideoFile] = useState(null);
-
-  // Voice recording state
   const [isRecording, setIsRecording] = useState(false);
   const [voiceTranscript, setVoiceTranscript] = useState("");
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
-
   const photoInputRef = useRef(null);
   const videoInputRef = useRef(null);
 
   const handlePhotoUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newPhotos = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      name: file.name,
-    }));
+    const newPhotos = files.map((file) => ({ file, preview: URL.createObjectURL(file), name: file.name }));
     setPhotos((prev) => [...prev, ...newPhotos]);
   };
-
   const removePhoto = (index) => {
-    setPhotos((prev) => {
-      URL.revokeObjectURL(prev[index].preview);
-      return prev.filter((_, i) => i !== index);
-    });
+    setPhotos((prev) => { URL.revokeObjectURL(prev[index].preview); return prev.filter((_, i) => i !== index); });
   };
-
   const handleVideoUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setVideoFile({ file, name: file.name, preview: URL.createObjectURL(file) });
-    }
+    if (file) setVideoFile({ file, name: file.name, preview: URL.createObjectURL(file) });
   };
-
-  const removeVideo = () => {
-    if (videoFile) URL.revokeObjectURL(videoFile.preview);
-    setVideoFile(null);
-  };
+  const removeVideo = () => { if (videoFile) URL.revokeObjectURL(videoFile.preview); setVideoFile(null); };
 
   const startVoiceRecording = async () => {
     try {
@@ -68,90 +49,46 @@ const ManufacturerDashboard = () => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
-      };
-
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
       mediaRecorder.onstop = () => {
         stream.getTracks().forEach((track) => track.stop());
-        // In a real app, you'd send the audio to a speech-to-text API
-        // For now, we simulate a transcript
-        setVoiceTranscript("Voice description recorded successfully. (Voice-to-text would process here)");
-        setDescription((prev) => prev ? prev + " " + "Voice description recorded." : "Voice description recorded.");
+        setVoiceTranscript("Voice description recorded successfully.");
+        setDescription((prev) => prev ? prev + " Voice description recorded." : "Voice description recorded.");
       };
-
       mediaRecorder.start();
       setIsRecording(true);
-    } catch (err) {
-      alert("Could not access microphone. Please allow microphone permission.");
-    }
+    } catch (err) { alert("Could not access microphone."); }
   };
-
-  const stopVoiceRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-  };
+  const stopVoiceRecording = () => { if (mediaRecorderRef.current && isRecording) { mediaRecorderRef.current.stop(); setIsRecording(false); } };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!productName.trim() || !price) return;
-
     const newProduct = {
-      id: "p" + Date.now(),
-      name: productName,
-      description: description || "No description provided",
-      price: Number(price),
-      category: "textiles",
-      image: photos.length > 0 ? photos[0].preview : initialProducts[0].image,
-      manufacturerId: "m1",
-      manufacturerName: "Lakshmi SHG",
-      photos: photos.map((p) => p.preview),
+      id: "p" + Date.now(), name: productName, description: description || "No description provided",
+      price: Number(price), category: "textiles", image: photos.length > 0 ? photos[0].preview : initialProducts[0].image,
+      manufacturerId: "m1", manufacturerName: "Lakshmi SHG", photos: photos.map((p) => p.preview),
     };
-
     setMyProducts((prev) => [newProduct, ...prev]);
     resetForm();
   };
 
-  // Edit state
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editPrice, setEditPrice] = useState("");
-
-  const startEdit = (product) => {
-    setEditingId(product.id);
-    setEditName(product.name);
-    setEditPrice(String(product.price));
-  };
-
-  const saveEdit = (id) => {
-    if (!editName.trim() || !editPrice) return;
-    setMyProducts((prev) =>
-      prev.map((p) => p.id === id ? { ...p, name: editName, price: Number(editPrice) } : p)
-    );
-    setEditingId(null);
-  };
-
-  const deleteProduct = (id) => {
-    setMyProducts((prev) => prev.filter((p) => p.id !== id));
-  };
-
-  const resetForm = () => {
-    setProductName("");
-    setPrice("");
-    setDescription("");
-    setPhotos([]);
-    setVideoFile(null);
-    setVoiceTranscript("");
-    setShowAddForm(false);
-  };
+  const startEdit = (product) => { setEditingId(product.id); setEditName(product.name); setEditPrice(String(product.price)); };
+  const saveEdit = (id) => { if (!editName.trim() || !editPrice) return; setMyProducts((prev) => prev.map((p) => p.id === id ? { ...p, name: editName, price: Number(editPrice) } : p)); setEditingId(null); };
+  const deleteProduct = (id) => { setMyProducts((prev) => prev.filter((p) => p.id !== id)); };
+  const resetForm = () => { setProductName(""); setPrice(""); setDescription(""); setPhotos([]); setVideoFile(null); setVoiceTranscript(""); setShowAddForm(false); };
 
   return (
     <div className="min-h-screen">
       <Navbar />
       <div className="container py-10">
+        <button className="btn btn-ghost btn-sm mb-6" onClick={() => navigate("/")}>
+          <ArrowLeft style={{ height: '1rem', width: '1rem' }} /> Back to Home
+        </button>
+
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="dashboard-header-row">
             <div>
@@ -195,12 +132,10 @@ const ManufacturerDashboard = () => {
                     <input className="form-input" id="price" type="number" placeholder="500" value={price} onChange={(e) => setPrice(e.target.value)} required />
                   </div>
                 </div>
-
                 <div className="form-group">
                   <label className="form-label" htmlFor="description">Description</label>
                   <textarea className="form-textarea" id="description" placeholder="Describe your product..." rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
                 </div>
-
                 <div className="form-group">
                   <label className="form-label">Or describe using voice</label>
                   {!isRecording ? (
@@ -212,11 +147,8 @@ const ManufacturerDashboard = () => {
                       <Square style={{ height: '1rem', width: '1rem', color: 'hsl(var(--destructive))' }} /> Stop Recording...
                     </button>
                   )}
-                  {voiceTranscript && (
-                    <p className="voice-transcript">{voiceTranscript}</p>
-                  )}
+                  {voiceTranscript && <p className="voice-transcript">{voiceTranscript}</p>}
                 </div>
-
                 <div className="add-form-grid">
                   <div className="form-group">
                     <label className="form-label">Product Photos</label>
@@ -231,9 +163,7 @@ const ManufacturerDashboard = () => {
                           <div key={i} className="uploaded-file">
                             <img src={photo.preview} alt={photo.name} className="uploaded-file-preview" />
                             <span className="uploaded-file-name">{photo.name}</span>
-                            <button type="button" className="btn btn-ghost btn-sm" onClick={() => removePhoto(i)}>
-                              <X style={{ height: '0.75rem', width: '0.75rem' }} />
-                            </button>
+                            <button type="button" className="btn btn-ghost btn-sm" onClick={() => removePhoto(i)}><X style={{ height: '0.75rem', width: '0.75rem' }} /></button>
                           </div>
                         ))}
                       </div>
@@ -251,15 +181,12 @@ const ManufacturerDashboard = () => {
                         <div className="uploaded-file">
                           <Video style={{ height: '1rem', width: '1rem', color: 'hsl(var(--primary))' }} />
                           <span className="uploaded-file-name">{videoFile.name}</span>
-                          <button type="button" className="btn btn-ghost btn-sm" onClick={removeVideo}>
-                            <X style={{ height: '0.75rem', width: '0.75rem' }} />
-                          </button>
+                          <button type="button" className="btn btn-ghost btn-sm" onClick={removeVideo}><X style={{ height: '0.75rem', width: '0.75rem' }} /></button>
                         </div>
                       </div>
                     )}
                   </div>
                 </div>
-
                 <div className="form-buttons">
                   <button type="submit" className="btn btn-primary">Save Product</button>
                   <button type="button" className="btn btn-outline" onClick={resetForm}>Cancel</button>
@@ -288,21 +215,13 @@ const ManufacturerDashboard = () => {
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 {editingId === p.id ? (
                   <>
-                    <button className="btn btn-primary btn-sm" onClick={() => saveEdit(p.id)}>
-                      <Check style={{ height: '0.75rem', width: '0.75rem' }} /> Save
-                    </button>
-                    <button className="btn btn-outline btn-sm" onClick={() => setEditingId(null)}>
-                      Cancel
-                    </button>
+                    <button className="btn btn-primary btn-sm" onClick={() => saveEdit(p.id)}><Check style={{ height: '0.75rem', width: '0.75rem' }} /> Save</button>
+                    <button className="btn btn-outline btn-sm" onClick={() => setEditingId(null)}>Cancel</button>
                   </>
                 ) : (
                   <>
-                    <button className="btn btn-outline btn-sm" onClick={() => startEdit(p)}>
-                      <Edit style={{ height: '0.75rem', width: '0.75rem' }} /> Edit
-                    </button>
-                    <button className="btn btn-ghost btn-sm" onClick={() => deleteProduct(p.id)}>
-                      <Trash2 style={{ height: '0.75rem', width: '0.75rem', color: 'hsl(var(--destructive))' }} />
-                    </button>
+                    <button className="btn btn-outline btn-sm" onClick={() => startEdit(p)}><Edit style={{ height: '0.75rem', width: '0.75rem' }} /> Edit</button>
+                    <button className="btn btn-ghost btn-sm" onClick={() => deleteProduct(p.id)}><Trash2 style={{ height: '0.75rem', width: '0.75rem', color: 'hsl(var(--destructive))' }} /></button>
                   </>
                 )}
               </div>

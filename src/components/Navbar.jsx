@@ -1,19 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingBag, User, Menu, X, LogOut, UserCircle } from "lucide-react";
+import { ShoppingBag, User, Menu, X, ShoppingCart, Heart, UserCircle } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, isLoggedIn, logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
-
-  const dashboardPath = user?.role === "manufacturer" ? "/manufacturer/dashboard" : "/buyer/dashboard";
+  const { user, isLoggedIn } = useAuth();
 
   return (
     <nav className="navbar">
@@ -28,14 +21,18 @@ const Navbar = () => {
           <Link to="/categories" className="navbar-link">Categories</Link>
           {isLoggedIn ? (
             <>
-              <button className="btn btn-outline btn-sm" onClick={() => navigate(dashboardPath)}>
-                Dashboard
-              </button>
+              {user?.role === "buyer" && (
+                <>
+                  <button className="btn btn-outline btn-sm" onClick={() => navigate("/buyer/dashboard")}>
+                    <ShoppingCart style={{ height: '1rem', width: '1rem' }} /> Cart
+                  </button>
+                  <button className="btn btn-outline btn-sm" onClick={() => navigate("/buyer/dashboard")}>
+                    <Heart style={{ height: '1rem', width: '1rem' }} /> Wishlist
+                  </button>
+                </>
+              )}
               <button className="btn btn-outline btn-sm" onClick={() => navigate("/profile")}>
                 <UserCircle style={{ height: '1rem', width: '1rem' }} /> Profile
-              </button>
-              <button className="btn btn-outline btn-sm btn-logout" onClick={handleLogout}>
-                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
               </button>
             </>
           ) : (
@@ -61,12 +58,18 @@ const Navbar = () => {
           <Link to="/categories" className="navbar-link" onClick={() => setMobileOpen(false)}>Categories</Link>
           {isLoggedIn ? (
             <>
-              <button className="btn btn-outline btn-sm" onClick={() => { navigate(dashboardPath); setMobileOpen(false); }}>Dashboard</button>
+              {user?.role === "buyer" && (
+                <>
+                  <button className="btn btn-outline btn-sm" onClick={() => { navigate("/buyer/dashboard"); setMobileOpen(false); }}>
+                    <ShoppingCart style={{ height: '1rem', width: '1rem' }} /> Cart
+                  </button>
+                  <button className="btn btn-outline btn-sm" onClick={() => { navigate("/buyer/dashboard"); setMobileOpen(false); }}>
+                    <Heart style={{ height: '1rem', width: '1rem' }} /> Wishlist
+                  </button>
+                </>
+              )}
               <button className="btn btn-outline btn-sm" onClick={() => { navigate("/profile"); setMobileOpen(false); }}>
                 <UserCircle style={{ height: '1rem', width: '1rem' }} /> Profile
-              </button>
-              <button className="btn btn-outline btn-sm btn-logout" onClick={() => { handleLogout(); setMobileOpen(false); }}>
-                <LogOut style={{ height: '1rem', width: '1rem' }} /> Logout
               </button>
             </>
           ) : (

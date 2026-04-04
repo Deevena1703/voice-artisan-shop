@@ -10,24 +10,19 @@ import { useState } from "react";
 const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const [wishlisted, setWishlisted] = useState(false);
   const product = products.find((p) => p.id === id);
   const manufacturer = product ? manufacturers.find((m) => m.id === product.manufacturerId) : null;
 
-  const handleAddToCart = () => {
-    if (!isLoggedIn) {
-      navigate("/login");
-      return;
-    }
-    alert("Added to cart! Go to Buyer Dashboard to view your cart.");
-  };
+  const backPath = isLoggedIn ? (user?.role === "manufacturer" ? "/manufacturer/dashboard" : "/buyer/dashboard") : "/";
 
+  const handleAddToCart = () => {
+    if (!isLoggedIn) { navigate("/login"); return; }
+    alert("Added to cart! Go to your Profile to view your cart.");
+  };
   const handleWishlist = () => {
-    if (!isLoggedIn) {
-      navigate("/login");
-      return;
-    }
+    if (!isLoggedIn) { navigate("/login"); return; }
     setWishlisted(!wishlisted);
   };
 
@@ -49,7 +44,7 @@ const ProductDetailPage = () => {
     <div className="min-h-screen">
       <Navbar />
       <div className="container py-10">
-        <button className="btn btn-ghost btn-sm mb-6" onClick={() => navigate(-1)}>
+        <button className="btn btn-ghost btn-sm mb-6" onClick={() => navigate(backPath)}>
           <ArrowLeft style={{ height: '1rem', width: '1rem' }} /> Back
         </button>
 
@@ -71,9 +66,7 @@ const ProductDetailPage = () => {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
-            <span className="detail-badge">
-              {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
-            </span>
+            <span className="detail-badge">{product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
             <h1 className="detail-title">{product.name}</h1>
             <p className="detail-price">₹{product.price.toLocaleString("en-IN")}</p>
             <p className="detail-description">{product.description}</p>

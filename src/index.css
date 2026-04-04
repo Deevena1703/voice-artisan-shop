@@ -547,3 +547,45 @@ button { cursor: pointer; font-family: inherit; }
 .profile-detail-row { display: flex; align-items: flex-start; gap: 0.75rem; }
 .profile-detail-label { font-size: 0.75rem; color: hsl(var(--muted-foreground)); }
 .profile-detail-value { font-size: 1rem; font-weight: 500; color: hsl(var(--foreground)); }
+
+/* Profile Tabs */
+.profile-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; border-bottom: 2px solid hsl(var(--border)); padding-bottom: 0; }
+.profile-tab {
+  display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.2rem;
+  font-size: 0.875rem; font-weight: 500; border: none; background: none;
+  color: hsl(var(--muted-foreground)); border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: all 0.2s;
+}
+.profile-tab:hover { color: hsl(var(--foreground)); }
+.profile-tab.active { color: hsl(var(--primary)); border-bottom-color: hsl(var(--primary)); }
+
+.profile-action-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+/* Empty State */
+.empty-state-card {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 3rem 2rem; background: hsl(var(--card)); border: 1px solid hsl(var(--border));
+  border-radius: var(--radius); text-align: center;
+}
+.empty-state-title { font-size: 1.1rem; font-weight: 600; margin-top: 1rem; color: hsl(var(--foreground)); }
+.empty-state-sub { font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-top: 0.25rem; }
+
+/* Transactions Table */
+.transactions-table-wrapper {
+  overflow-x: auto; background: hsl(var(--card)); border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+.transactions-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.transactions-table th {
+  text-align: left; padding: 0.75rem 1rem; font-weight: 600; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.05em; color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--muted) / 0.5);
+}
+.transactions-table td { padding: 0.75rem 1rem; border-bottom: 1px solid hsl(var(--border) / 0.5); }
+.transaction-status {
+  display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px;
+  font-size: 0.75rem; font-weight: 500;
+}
+.status-completed { background: hsl(var(--accent) / 0.15); color: hsl(var(--accent)); }
+.status-shipped { background: hsl(var(--primary) / 0.15); color: hsl(var(--primary)); }
+.status-processing { background: hsl(var(--gold) / 0.2); color: hsl(20 30% 35%); }
