@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { products as initialProducts } from "../lib/mock-data.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Package, Mic, Video, Edit, Upload, X, Square, Image, Check, Trash2, ArrowLeft } from "lucide-react";
+import { Plus, Package, Mic, Video, Edit, Upload, X, Square, Image, Check, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -85,10 +85,6 @@ const ManufacturerDashboard = () => {
     <div className="min-h-screen">
       <Navbar />
       <div className="container py-10">
-        <button className="btn btn-ghost btn-sm mb-6" onClick={() => navigate("/")}>
-          <ArrowLeft style={{ height: '1rem', width: '1rem' }} /> Back to Home
-        </button>
-
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="dashboard-header-row">
             <div>

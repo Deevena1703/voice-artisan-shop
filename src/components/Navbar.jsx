@@ -23,11 +23,11 @@ const Navbar = () => {
             <>
               {user?.role === "buyer" && (
                 <>
-                  <button className="btn btn-outline btn-sm" onClick={() => navigate("/buyer/dashboard")}>
-                    <ShoppingCart style={{ height: '1rem', width: '1rem' }} /> Cart
+                  <button className="btn btn-outline btn-sm" aria-label="Cart" onClick={() => navigate("/profile")}>
+                    <ShoppingCart style={{ height: '1rem', width: '1rem' }} />
                   </button>
-                  <button className="btn btn-outline btn-sm" onClick={() => navigate("/buyer/dashboard")}>
-                    <Heart style={{ height: '1rem', width: '1rem' }} /> Wishlist
+                  <button className="btn btn-outline btn-sm" aria-label="Wishlist" onClick={() => navigate("/profile")}>
+                    <Heart style={{ height: '1rem', width: '1rem' }} />
                   </button>
                 </>
               )}
@@ -60,11 +60,11 @@ const Navbar = () => {
             <>
               {user?.role === "buyer" && (
                 <>
-                  <button className="btn btn-outline btn-sm" onClick={() => { navigate("/buyer/dashboard"); setMobileOpen(false); }}>
-                    <ShoppingCart style={{ height: '1rem', width: '1rem' }} /> Cart
+                  <button className="btn btn-outline btn-sm" aria-label="Cart" onClick={() => { navigate("/profile"); setMobileOpen(false); }}>
+                    <ShoppingCart style={{ height: '1rem', width: '1rem' }} />
                   </button>
-                  <button className="btn btn-outline btn-sm" onClick={() => { navigate("/buyer/dashboard"); setMobileOpen(false); }}>
-                    <Heart style={{ height: '1rem', width: '1rem' }} /> Wishlist
+                  <button className="btn btn-outline btn-sm" aria-label="Wishlist" onClick={() => { navigate("/profile"); setMobileOpen(false); }}>
+                    <Heart style={{ height: '1rem', width: '1rem' }} />
                   </button>
                 </>
               )}
